@@ -6,14 +6,23 @@ namespace TheiaV1
 {
     public partial class Form1 : Form
     {
+        // Main Menu
         private Button navButton;
         private Button emergencyButton;
         private TrackBar settingsSwipe;
         private Label settingsSwipeLabel;
 
+        // Settings Menu
         private Button settingsCloseButton;
         private Button programNewRouteButton;
-        private Button moreSettingsButton;
+        private TrackBar volumeSetting;
+        private Label volumeSettingLabel;
+        private ComboBox languageSetting;
+        private Label languageSettingLabel;
+        private TextBox emergencyContactName;
+        private Label emergencyContactNameLabel;
+        private TextBox emergencyContactPhoneNumber;
+        private Label emergencyContactPhoneNumberLabel;
 
         public Form1()
         {
@@ -23,6 +32,8 @@ namespace TheiaV1
 
         private void CreatePrototypeButtons()
         {
+            this.Text = "THEIA";
+
             // ----- COMMON SETTINGS -----
             // Big font, easy to read / demo
             var bigFont = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.Point);
@@ -33,21 +44,40 @@ namespace TheiaV1
             settingsSwipeLabel = new Label();
             settingsCloseButton = new Button();
             programNewRouteButton = new Button();
-            moreSettingsButton = new Button();
+            volumeSetting = new TrackBar();
+            volumeSettingLabel = new Label();
+            languageSetting = new ComboBox();
+            languageSettingLabel = new Label();
+            emergencyContactName = new TextBox();
+            emergencyContactNameLabel = new Label();
+            emergencyContactPhoneNumber = new TextBox();
+            emergencyContactPhoneNumberLabel = new Label();
 
             navButton.Text = "Navigation";
             emergencyButton.Text = "Notify Emergency Contact\n(Tap twice)";
             settingsSwipeLabel.Text = "Caretaker: Swipe to access settings.";
             settingsCloseButton.Text = "Close Settings";
             programNewRouteButton.Text = "Program new route";
-            moreSettingsButton.Text = "More settings";
+            volumeSettingLabel.Text = "Volume";
+            languageSettingLabel.Text = "Language";
+            emergencyContactName.PlaceholderText = "Name";
+            emergencyContactNameLabel.Text = "Emergency Contact Name";
+            emergencyContactPhoneNumber.PlaceholderText = "##########"; 
+            emergencyContactPhoneNumberLabel.Text = "Emergency Contact Phone Number"; 
+
+            languageSetting.Items.Add("English");
+            languageSetting.Items.Add("Spanish (Coming soon)");
+            languageSetting.DropDownStyle = ComboBoxStyle.DropDownList;
+            languageSetting.SelectedIndex = 0;
+            settingsSwipe.Minimum = 0;
+            settingsSwipe.Maximum = 100;
+            volumeSetting.Minimum = 0;
+            volumeSetting.Maximum = 100;
+            volumeSetting.Value = 100;
 
             navButton.Font = bigFont;
             emergencyButton.Font = bigFont;
             settingsCloseButton.Font = bigFont;
-
-            settingsSwipe.Minimum = 0;
-            settingsSwipe.Maximum = 100;
 
             // Make the buttons flat and high-contrast
             navButton.FlatStyle = FlatStyle.Flat;
@@ -79,14 +109,28 @@ namespace TheiaV1
             settingsSwipeLabel.Width = usableWidth;
             settingsCloseButton.Width = usableWidth;
             programNewRouteButton.Width = usableWidth;
-            moreSettingsButton.Width = usableWidth;
+            volumeSetting.Width = usableWidth;
+            volumeSettingLabel.Width = usableWidth;
+            languageSetting.Width = usableWidth;
+            languageSettingLabel.Width = usableWidth;
+            emergencyContactName.Width = usableWidth;
+            emergencyContactNameLabel.Width = usableWidth;
+            emergencyContactPhoneNumber.Width = usableWidth;
+            emergencyContactPhoneNumberLabel.Width = usableWidth;
 
             navButton.Height = buttonHeight;
             emergencyButton.Height = buttonHeight;
             settingsSwipe.Height = 30;
             settingsCloseButton.Height = buttonHeight;
             programNewRouteButton.Height = 60;
-            moreSettingsButton.Height = 60;
+            volumeSetting.Height = 30;
+            volumeSettingLabel.Height = 20;
+            languageSetting.Height = 60;
+            languageSettingLabel.Height = 20;
+            emergencyContactName.Height = 60;
+            emergencyContactNameLabel.Height = 20;
+            emergencyContactPhoneNumber.Height = 60;
+            emergencyContactPhoneNumberLabel.Height = 20;
 
             navButton.Left = pictureBox1.Left + marginLeftRight;
             emergencyButton.Left = navButton.Left;
@@ -94,7 +138,14 @@ namespace TheiaV1
             settingsSwipeLabel.Left = navButton.Left;
             settingsCloseButton.Left = navButton.Left;
             programNewRouteButton.Left = navButton.Left;
-            moreSettingsButton.Left = navButton.Left;
+            volumeSetting.Left = navButton.Left;
+            volumeSettingLabel.Left = navButton.Left;
+            languageSetting.Left = navButton.Left;
+            languageSettingLabel.Left = navButton.Left;
+            emergencyContactName.Left = navButton.Left;
+            emergencyContactNameLabel.Left = navButton.Left;
+            emergencyContactPhoneNumber.Left = navButton.Left;
+            emergencyContactPhoneNumberLabel.Left = navButton.Left;
 
             navButton.Top = pictureBox1.Top + marginTop;
             emergencyButton.Top = navButton.Bottom + gapBetweenButtons;
@@ -102,7 +153,14 @@ namespace TheiaV1
             settingsSwipeLabel.Top = settingsSwipe.Bottom;
             settingsCloseButton.Top = navButton.Top;
             programNewRouteButton.Top = settingsCloseButton.Bottom + gapBetweenButtons;
-            moreSettingsButton.Top = programNewRouteButton.Bottom + gapBetweenButtons;
+            volumeSettingLabel.Top = programNewRouteButton.Bottom + gapBetweenButtons;
+            volumeSetting.Top = volumeSettingLabel.Bottom;
+            languageSettingLabel.Top = volumeSetting.Bottom;
+            languageSetting.Top = languageSettingLabel.Bottom;
+            emergencyContactNameLabel.Top = languageSetting.Bottom;
+            emergencyContactName.Top = emergencyContactNameLabel.Bottom;
+            emergencyContactPhoneNumberLabel.Top = emergencyContactName.Bottom;
+            emergencyContactPhoneNumber.Top = emergencyContactPhoneNumberLabel.Bottom;
 
             // ----- EVENTS -----
             navButton.Click += NavButton_Click;
@@ -111,7 +169,6 @@ namespace TheiaV1
             settingsSwipe.MouseUp += OnSettingsSwipe;
             settingsCloseButton.Click += OnSettingsCloseButtonClick;
             programNewRouteButton.Click += OnProgramNewRouteButtonClick;
-            moreSettingsButton.Click += OnMoreSettingsButtonClick;
 
             // Add buttons to the form and bring them above the phone image
             Controls.Add(navButton);
@@ -120,11 +177,25 @@ namespace TheiaV1
             Controls.Add(settingsSwipeLabel);
             Controls.Add(settingsCloseButton);
             Controls.Add(programNewRouteButton);
-            Controls.Add(moreSettingsButton);
+            Controls.Add(volumeSettingLabel);
+            Controls.Add(volumeSetting);
+            Controls.Add(languageSettingLabel);
+            Controls.Add(languageSetting);
+            Controls.Add(emergencyContactNameLabel);
+            Controls.Add(emergencyContactName);
+            Controls.Add(emergencyContactPhoneNumberLabel);
+            Controls.Add(emergencyContactPhoneNumber);
 
             settingsCloseButton.Visible = false;
             programNewRouteButton.Visible = false;
-            moreSettingsButton.Visible = false;
+            volumeSettingLabel.Visible = false;
+            volumeSetting.Visible = false;
+            languageSettingLabel.Visible = false;
+            languageSetting.Visible = false;
+            emergencyContactNameLabel.Visible = false;
+            emergencyContactName.Visible = false;
+            emergencyContactPhoneNumberLabel.Visible = false;
+            emergencyContactPhoneNumber.Visible = false;
 
             navButton.BringToFront();
             emergencyButton.BringToFront();
@@ -132,7 +203,14 @@ namespace TheiaV1
             settingsSwipeLabel.BringToFront();
             settingsCloseButton.BringToFront();
             programNewRouteButton.BringToFront();
-            moreSettingsButton.BringToFront();
+            volumeSettingLabel.BringToFront();
+            volumeSetting.BringToFront();
+            languageSettingLabel.BringToFront();
+            languageSetting.BringToFront();
+            emergencyContactNameLabel.BringToFront();
+            emergencyContactName.BringToFront();
+            emergencyContactPhoneNumberLabel.BringToFront();
+            emergencyContactPhoneNumber.BringToFront();
         }
 
         private bool isFirstPaint = true;
@@ -158,6 +236,19 @@ namespace TheiaV1
         // Top half: simulate Scenario #1 (TO-BE)
         private void NavButton_Click(object? sender, EventArgs e)
         {
+            if (emergencyContactName.Text == "" || emergencyContactPhoneNumber.Text == "")
+            {
+                MessageBox.Show(
+                    "THEIA: Please ask your caretaker to set up an emergency contact before using the app.\n\n" +
+                    "(In the real app this would be spoken aloud)",
+                    "THEIA - Emergency Contact Not Set Up",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
+                return;
+            }
+
             // Step 1: the app "asks" where Stevie wants to go
             MessageBox.Show(
                 "THEIA: Where do you want to go?\n\n" +
@@ -224,7 +315,14 @@ namespace TheiaV1
             settingsSwipeLabel.Visible = false;
             settingsCloseButton.Visible = true;
             programNewRouteButton.Visible = true;
-            moreSettingsButton.Visible = true;
+            volumeSettingLabel.Visible = true;
+            volumeSetting.Visible = true;
+            languageSettingLabel.Visible = true;
+            languageSetting.Visible = true;
+            emergencyContactNameLabel.Visible = true;
+            emergencyContactName.Visible = true;
+            emergencyContactPhoneNumberLabel.Visible = true;
+            emergencyContactPhoneNumber.Visible = true;
         }
 
         private void OnSettingsCloseButtonClick(object? sender, EventArgs e)
@@ -235,7 +333,14 @@ namespace TheiaV1
             settingsSwipeLabel.Visible = true;
             settingsCloseButton.Visible = false;
             programNewRouteButton.Visible = false;
-            moreSettingsButton.Visible = false;
+            volumeSettingLabel.Visible = false;
+            volumeSetting.Visible = false;
+            languageSettingLabel.Visible = false;
+            languageSetting.Visible = false;
+            emergencyContactNameLabel.Visible = false;
+            emergencyContactName.Visible = false;
+            emergencyContactPhoneNumberLabel.Visible = false;
+            emergencyContactPhoneNumber.Visible = false;
         }
 
         private void OnProgramNewRouteButtonClick(object? sender, EventArgs e)
@@ -266,6 +371,19 @@ namespace TheiaV1
 
         private void BottomButton_Click(object? sender, EventArgs e)
         {
+            if (emergencyContactName.Text == "" || emergencyContactPhoneNumber.Text == "")
+            {
+                MessageBox.Show(
+                    "THEIA: Please ask your caretaker to set up an emergency contact before using the app.\n\n" +
+                    "(In the real app this would be spoken aloud)",
+                    "THEIA - Emergency Contact Not Set Up",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
+                return;
+            }
+
             if (!lastTapTime.HasValue || DateTime.Now > lastTapTime.Value + new TimeSpan(0, 0, 1))
             {
                 lastTapTime = DateTime.Now;
@@ -288,7 +406,7 @@ namespace TheiaV1
             lastTapTime = null;
 
             MessageBox.Show(
-                "THEIA: Your emergency contact has been notified that you are in distress and has been " +
+                "THEIA: " + emergencyContactName.Text + " has been notified that you are in distress and has been " +
                 "provided with your current location.\n\n" +
                 "Please remain calm. Help is on the way. If it is a serious emergency, tap the button " +
                 "twice more to call 911.",
