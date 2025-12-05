@@ -7,12 +7,12 @@ namespace TheiaV1
     public partial class Form1 : Form
     {
         private Button navButton;
-        private Button bottomButton;
+        private Button emergencyButton;
         private TrackBar settingsSwipe;
         private Label settingsSwipeLabel;
 
         private Button settingsCloseButton;
-        private Button programNewDestinationButton;
+        private Button programNewRouteButton;
         private Button moreSettingsButton;
 
         public Form1()
@@ -28,20 +28,22 @@ namespace TheiaV1
             var bigFont = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.Point);
 
             navButton = new Button();
-            bottomButton = new Button();
+            emergencyButton = new Button();
             settingsSwipe = new TrackBar();
             settingsSwipeLabel = new Label();
             settingsCloseButton = new Button();
-            programNewDestinationButton = new Button();
+            programNewRouteButton = new Button();
             moreSettingsButton = new Button();
 
             navButton.Text = "Navigation";
-            bottomButton.Text = "Notify Emergency Contact";
+            emergencyButton.Text = "Notify Emergency Contact\n(Tap twice)";
             settingsSwipeLabel.Text = "Caretaker: Swipe to access settings.";
             settingsCloseButton.Text = "Close Settings";
+            programNewRouteButton.Text = "Program new route";
+            moreSettingsButton.Text = "More settings";
 
             navButton.Font = bigFont;
-            bottomButton.Font = bigFont;
+            emergencyButton.Font = bigFont;
             settingsCloseButton.Font = bigFont;
 
             settingsSwipe.Minimum = 0;
@@ -49,15 +51,15 @@ namespace TheiaV1
 
             // Make the buttons flat and high-contrast
             navButton.FlatStyle = FlatStyle.Flat;
-            bottomButton.FlatStyle = FlatStyle.Flat;
+            emergencyButton.FlatStyle = FlatStyle.Flat;
             settingsCloseButton.FlatStyle = FlatStyle.Flat;
 
             navButton.BackColor = Color.LightSteelBlue;
-            bottomButton.BackColor = Color.LightGray;
+            emergencyButton.BackColor = Color.LightGray;
             settingsCloseButton.BackColor = Color.LightSteelBlue;
 
             navButton.ForeColor = Color.Black;
-            bottomButton.ForeColor = Color.Black;
+            emergencyButton.ForeColor = Color.Black;
             settingsCloseButton.ForeColor = Color.Black;
 
             // ----- POSITIONING -----
@@ -72,48 +74,65 @@ namespace TheiaV1
             int buttonHeight = (usableHeight - gapBetweenButtons) / 2;
 
             navButton.Width = usableWidth;
-            bottomButton.Width = usableWidth;
+            emergencyButton.Width = usableWidth;
             settingsSwipe.Width = usableWidth;
             settingsSwipeLabel.Width = usableWidth;
             settingsCloseButton.Width = usableWidth;
+            programNewRouteButton.Width = usableWidth;
+            moreSettingsButton.Width = usableWidth;
 
             navButton.Height = buttonHeight;
-            bottomButton.Height = buttonHeight;
+            emergencyButton.Height = buttonHeight;
             settingsSwipe.Height = 30;
             settingsCloseButton.Height = buttonHeight;
+            programNewRouteButton.Height = 60;
+            moreSettingsButton.Height = 60;
 
             navButton.Left = pictureBox1.Left + marginLeftRight;
-            bottomButton.Left = navButton.Left;
+            emergencyButton.Left = navButton.Left;
             settingsSwipe.Left = navButton.Left;
             settingsSwipeLabel.Left = navButton.Left;
             settingsCloseButton.Left = navButton.Left;
+            programNewRouteButton.Left = navButton.Left;
+            moreSettingsButton.Left = navButton.Left;
 
             navButton.Top = pictureBox1.Top + marginTop;
-            bottomButton.Top = navButton.Bottom + gapBetweenButtons;
-            settingsSwipe.Top = bottomButton.Bottom + gapBetweenButtons;
+            emergencyButton.Top = navButton.Bottom + gapBetweenButtons;
+            settingsSwipe.Top = emergencyButton.Bottom + gapBetweenButtons;
             settingsSwipeLabel.Top = settingsSwipe.Bottom;
             settingsCloseButton.Top = navButton.Top;
+            programNewRouteButton.Top = settingsCloseButton.Bottom + gapBetweenButtons;
+            moreSettingsButton.Top = programNewRouteButton.Bottom + gapBetweenButtons;
 
             // ----- EVENTS -----
             navButton.Click += NavButton_Click;
-            bottomButton.Click += BottomButton_Click;
+            emergencyButton.Click += BottomButton_Click;
             navButton.GotFocus += OnFirstPaint;
             settingsSwipe.MouseUp += OnSettingsSwipe;
+            settingsCloseButton.Click += OnSettingsCloseButtonClick;
+            programNewRouteButton.Click += OnProgramNewRouteButtonClick;
+            moreSettingsButton.Click += OnMoreSettingsButtonClick;
 
             // Add buttons to the form and bring them above the phone image
             Controls.Add(navButton);
-            Controls.Add(bottomButton);
+            Controls.Add(emergencyButton);
             Controls.Add(settingsSwipe);
             Controls.Add(settingsSwipeLabel);
             Controls.Add(settingsCloseButton);
+            Controls.Add(programNewRouteButton);
+            Controls.Add(moreSettingsButton);
 
             settingsCloseButton.Visible = false;
+            programNewRouteButton.Visible = false;
+            moreSettingsButton.Visible = false;
 
             navButton.BringToFront();
-            bottomButton.BringToFront();
+            emergencyButton.BringToFront();
             settingsSwipe.BringToFront();
             settingsSwipeLabel.BringToFront();
             settingsCloseButton.BringToFront();
+            programNewRouteButton.BringToFront();
+            moreSettingsButton.BringToFront();
         }
 
         private bool isFirstPaint = true;
@@ -200,10 +219,44 @@ namespace TheiaV1
             );
 
             navButton.Visible = false;
-            bottomButton.Visible = false;
-            settingsCloseButton.Visible = true;
+            emergencyButton.Visible = false;
             settingsSwipe.Visible = false;
             settingsSwipeLabel.Visible = false;
+            settingsCloseButton.Visible = true;
+            programNewRouteButton.Visible = true;
+            moreSettingsButton.Visible = true;
+        }
+
+        private void OnSettingsCloseButtonClick(object? sender, EventArgs e)
+        {
+            navButton.Visible = true;
+            emergencyButton.Visible = true;
+            settingsSwipe.Visible = true;
+            settingsSwipeLabel.Visible = true;
+            settingsCloseButton.Visible = false;
+            programNewRouteButton.Visible = false;
+            moreSettingsButton.Visible = false;
+        }
+
+        private void OnProgramNewRouteButtonClick(object? sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "(In the real app, the camera would open and the caretaker would " +
+                "be able to select a destination, waypoints, and define alternate routes.)",
+                "THEIA - Route Programming",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
+
+        private void OnMoreSettingsButtonClick(object? sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "(Placeholder for more settings that the app might need)",
+                "THEIA - More Settings",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
         }
 
         // Bottom half: simulate scenario #3 (TO-BE)
